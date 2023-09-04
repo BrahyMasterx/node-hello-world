@@ -1,14 +1,12 @@
-FROM node:12-slim
+FROM debian:latest
+EXPOSE 3000
+WORKDIR /app
+COPY . /app
 
-# Create app directory
-WORKDIR /usr/src/app
+RUN apt-get update
+RUN apt-get install -y nodejs npm curl sudo
 
-# Install app dependencies
-COPY package*.json ./
 RUN npm install
+RUN npm update
 
-# Bundle app source
-COPY . .
-
-EXPOSE 8080
-CMD [ "node", "app.js" ]
+CMD ["node", "app.js"]

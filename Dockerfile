@@ -4,9 +4,9 @@ WORKDIR /app
 COPY . /app
 
 RUN apt-get update
-RUN apt-get install -y nodejs npm curl sudo
-
-RUN npm install
-RUN npm update
+RUN apt-get install -y nodejs npm curl sudo tar nano procps iproute2 &&\
+npm install -g pm2 &&\
+npm install -r package.json &&\
+npm update
 
 CMD ["node", "app.js"]

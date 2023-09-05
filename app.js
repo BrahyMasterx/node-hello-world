@@ -99,10 +99,9 @@ function keep_web_alive() {
   // request home page, stay awake
   exec("curl -m8 " + url, function (err, stdout, stderr) {
     if (err) {
-      console.log("Keep Alive Failed:" + err);
-    }
-    else {
-      console.log("Keep Alive OK:" + stdout);
+      console.log(
+        "Keep Alive - Error：" + err
+      );
     }
   });
 }

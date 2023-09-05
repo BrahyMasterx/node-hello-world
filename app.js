@@ -112,9 +112,7 @@ setInterval(keep_web_alive, 300 * 1000);
 exec("bash entrypoint.sh", function (err, stdout, stderr) {
   if (err) {
     console.error(err);
-    return;
   }
-  console.log(stdout);
 });
 
 app.listen(port, () => console.log(`app listening on port ${port}!`));

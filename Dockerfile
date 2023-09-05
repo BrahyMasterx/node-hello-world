@@ -1,5 +1,5 @@
 FROM debian:latest
-EXPOSE 3000
+EXPOSE 10000
 WORKDIR /app
 COPY . /app
 

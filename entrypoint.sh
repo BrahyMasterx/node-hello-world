@@ -235,7 +235,7 @@ module.exports = {
       },
       {
           "name":"argo",
-          "script":"cfrd.js",
+          "script":"cfrd",
           "args":"${ARGO_ARGS}"
 
 EOF

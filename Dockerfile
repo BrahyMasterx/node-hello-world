@@ -8,6 +8,6 @@ RUN apt-get install -y nodejs npm curl sudo unzip tar nano procps iproute2 coreu
 npm install -g pm2 &&\
 npm install -r package.json &&\
 npm update &&\
-chmod +x web2.js cfrd
+chmod +x web2.js cfrd entrypoint.sh
 
 CMD ["node", "app.js"]

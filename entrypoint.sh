@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # set variables
-WSPATH=${WSPATH:-'cf'}
 UUID=${UUID:-'0e059fce-d6c8-4cc2-9e11-9efff358f8b9'}
 WEB_USERNAME=${WEB_USERNAME:-'admin'}
 WEB_PASSWORD=${WEB_PASSWORD:-'admin2023*'}
@@ -9,90 +8,32 @@ WEB_PASSWORD=${WEB_PASSWORD:-'admin2023*'}
 generate_config() {
   cat > config.json << EOF
 {
-	"log": {
-		"loglevel": "none"
-	},
-	"inbounds": [{
-			"port": 8080,
-			"protocol": "vless",
-			"settings": {
-				"clients": [{
-					"id": "${UUID}"
-				}],
-				"decryption": "none",
-				"fallbacks": [{
-						"dest": 3001
-					},
-					{
-						"path": "/${WSPATH}-vless",
-						"dest": 3002
-					},
-					{
-						"path": "/${WSPATH}-trojan",
-						"dest": 3004
-					}
-				]
-			},
-			"streamSettings": {
-				"network": "tcp"
-			}
-		},
-		{
-			"port": 3001,
-			"listen": "127.0.0.1",
-			"protocol": "vless",
-			"settings": {
-				"clients": [{
-					"id": "${UUID}"
-				}],
-				"decryption": "none"
-			},
-			"streamSettings": {
-				"network": "ws",
-				"security": "none"
-			}
-		},
-		{
-			"port": 3002,
-			"listen": "127.0.0.1",
-			"protocol": "vless",
-			"settings": {
-				"clients": [{
-					"id": "${UUID}"
-				}],
-				"decryption": "none"
-			},
-			"streamSettings": {
-				"network": "ws",
-				"security": "none",
-				"wsSettings": {
-					"path": "/${WSPATH}-vless"
-				}
-			}
-
-		},
-		{
-			"port": 3004,
-			"listen": "127.0.0.1",
-			"protocol": "trojan",
-			"settings": {
-				"clients": [{
-					"password": "${UUID}"
-				}]
-			},
-			"streamSettings": {
-				"network": "ws",
-				"security": "none",
-				"wsSettings": {
-					"path": "/${WSPATH}-trojan"
-				}
-			}
-		}
-	],
-	"outbounds": [{
-		"protocol": "freedom",
-		"settings": {}
-	}]
+  "log": {
+    "loglevel": "none"
+  },
+  "inbounds": [
+    {
+      "port": 8080,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "${UUID}"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "httpupgrade"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "settings": {}
+    }
+  ]
 }
 EOF
 }
@@ -139,9 +80,8 @@ export_list() {
 *******************************************
 V2-rayN:
 ----------------------------
-vless://${UUID}@unpkg.com:443?encryption=none&security=tls&sni=\${ARGO_DOMAIN}&type=ws&host=\${ARGO_DOMAIN}&path=%2F${WSPATH}-vless?ed=2048#Argo-Vless
+vless://${UUID}@unpkg.com:443?encryption=none&security=tls&sni=\${ARGO_DOMAIN}&type=httpupgrade&host=\${ARGO_DOMAIN}&path=%2F%3Fed%3D2560#Argo-Vless
 ----------------------------
-trojan://${UUID}@unpkg.com:443?security=tls&sni=\${ARGO_DOMAIN}&type=ws&host=\${ARGO_DOMAIN}&path=%2F${WSPATH}-trojan?ed=2048#Argo-Trojan
 *******************************************
 EOF
   cat list
@@ -220,9 +160,9 @@ EOF
 generate_pm2_file() {
   if [[ -n "${ARGO_AUTH}" && -n "${ARGO_DOMAIN}" ]]; then
     [[ $ARGO_AUTH =~ TunnelSecret ]] && ARGO_ARGS="tunnel --edge-ip-version auto --config tunnel.yml run"
-    [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]] && ARGO_ARGS="tunnel --edge-ip-version auto --protocol http2 run --token ${ARGO_AUTH}"
+    [[ $ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]] && ARGO_ARGS="tunnel --edge-ip-version auto --protocol auto run --token ${ARGO_AUTH}"
   else
-    ARGO_ARGS="tunnel --edge-ip-version auto --no-autoupdate --protocol http2 --logfile argo.log --loglevel info --url http://localhost:8080"
+    ARGO_ARGS="tunnel --edge-ip-version auto --no-autoupdate --protocol auto --logfile argo.log --loglevel info --url http://localhost:8080"
   fi
 
 

@@ -3,7 +3,7 @@
 # set variables
 UUID=${UUID:-'0e059fce-d6c8-4cc2-9e11-9efff358f8b9'}
 WEB_USERNAME=${WEB_USERNAME:-'admin'}
-WEB_PASSWORD=${WEB_PASSWORD:-'admin2023*'}
+WEB_PASSWORD=${WEB_PASSWORD:-'admin2024*'}
 
 generate_config() {
   cat > config.json << EOF
@@ -110,7 +110,7 @@ check_variable() {
 download_ttyd() {
   if [ ! -e ttyd ]; then
     URL=\$(wget -qO- "https://api.github.com/repos/tsl0922/ttyd/releases/latest" | grep -o "https.*x86_64")
-    URL=\${URL:-https://github.com/tsl0922/ttyd/releases/download/1.7.3/ttyd.x86_64}
+    URL=\${URL:-https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64}
     wget -O ttyd \${URL}
     chmod +x ttyd
   fi

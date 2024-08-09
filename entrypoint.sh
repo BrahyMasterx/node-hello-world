@@ -185,7 +185,7 @@ EOF
       {
           "name":"ttyd",
           "script":"/app/ttyd",
-          "args":"-c ${WEB_USERNAME}:${WEB_PASSWORD} -p 2222 bash"
+          "args":"-c ${WEB_USERNAME}:${WEB_PASSWORD} -W -p 2222 bash"
 EOF
 
   [ -n "${FTP_DOMAIN}" ] && cat >> ecosystem.config.js << EOF
